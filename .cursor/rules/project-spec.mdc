@@ -1,0 +1,54 @@
+---
+description: Core rules, conventions, and architectural guidelines for Bills SPLITr app project.
+globs:
+alwaysApply: true
+---
+
+## Project Overview: Bills SPLITr is a user-friendly mobile app designed to simplify shared expenses. Whether you’re dining out with friends, splitting rent with roommates, or managing group activities, this app calculates each person’s share instantly. It also automatically factors in taxes and tips if included, allowing for accurate, stress-free bill splitting. The interface is clean and intuitive, making it accessible even to users with minimal tech experience. The results can be shared by copying to the clipboard or sharing unique links directly, via social media, or QR codes.
+
+Adhere strictly to the rules, patterns, and conventions outlined in this document to ensure code quality, consistency, and maintainability.
+
+## Technology Stack
+The project uses the following technologies. Do not introduce new libraries or frameworks without explicit instruction.
+
+- Language: TypeScript
+- Main Framework: React (with Vite)
+- Database & Auth: Supabase
+- Styling: Tailwind CSS with shadcn/ui components, Recharts for pie/bar charts in Bill Details, and Framer Motion for smooth transitions (modals, item lists, etc.)
+- State and Data Handling: Supabase (Primary Data layer) - Postgres DB for bills, items, and participants; realtime subscriptions if we implement collaborative editing later; Supabase client handles data fetching and mutation directly in React. React Query (TanStack Query) for data fetching + caching - Handles async state (loading, error, stale vs fresh); pairs perfectly with Supabase SDK.
+- Utility Libraries: A library like qrcode.react for generating QR codes.
+- Testing: Jest + React Testing Library for unit/component testing, and Playwright (optional) for end-to-end/integration testing for flows like “create bill → add items → share.”
+
+
+
+## Architecture & Code Style
+
+- **Operating System Support:** The project is developed and tested primarily on Windows OS. When writing documentation or scripts, use Windows-style paths (e.g., `.\app\page.tsx`) and commands. Always check the current working directory before running terminal commands to avoid unnecessary path prefixes.
+
+- Directory Structure: Follow the standard React/Vite App Router structure.
+    - `\app` for routes and pages.
+    - `\components\ui` for `shadcn\ui` components.
+    - `\components\` for custom, reusable components.
+    - `\lib` for Supabase client setup, utility functions, and Server Actions.
+
+- Naming Conventions: Component files should be PascalCase (CreateBillForm.tsx). Utility and action functions should be camelCase (submitBill.ts).
+- Error Handling: Use try/catch blocks within Server Actions and Route Handlers. Use Next.js error.tsx files for handling errors within route segments.
+- API Keys & Secrets: Never hardcode secrets. Use environment variables (.env.local) for Supabase URL and keys, accessed via process.env.NEXT_PUBLIC_SUPABASE_URL and process.env.SUPABASE_SECRET_KEY.
+
+## Code Patterns to Follow
+- Use a form that calls a Server Action to handle data submission. This keeps client-side JavaScript minimal.
+- Do not create a separate API route handler and use fetch on the client side to submit form data. Use Server Actions instead.
+- Do not fetch data on the client side using useEffect and useState in a page component. Fetch data directly in a Server Component.
+
+## Verification Checklist
+Before finalizing your response, you MUST verify the following:
+- Does the code use the Next.js App Router and Server Components for data fetching?
+- Are Server Actions used for data mutations (forms)?
+- Is the Supabase client used for all database interactions?
+- Are shadcn/ui components used for the UI where appropriate?
+- Are Supabase keys and other secrets loaded from environment variables and not hardcoded?
+
+## Developer Notes
+- **Routing:** Bills List is root → all other screens branch from it.
+- **Modals:** Add People + Share = overlay components, not full navigations.
+- **UX Priority:** Reduce friction → no required participants, bill name optional.

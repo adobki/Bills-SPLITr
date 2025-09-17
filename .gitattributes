@@ -1,0 +1,21 @@
+# Force Git to use LF line endings for all text files, bypassing default CRLF on Windows
+
+# Automatically normalize to LF, regardless of platform
+* text=auto eol=lf
+
+# Force markdown and text files to use LF line endings (even for text-based Windows files)
+*.md text eol=lf
+*.txt text eol=lf
+
+# Ensure shell scripts and batch files also use LF (this is a rare use case for Windows)
+*.cmd text eol=lf
+*.bat text eol=lf
+*.sh text eol=lf
+
+# Ensure configuration files like JSON and YAML use LF line endings
+*.json text eol=lf
+*.yaml text eol=lf
+
+# Use a custom diff driver for JavaScript and JSON files if needed
+*.js diff=javascript
+*.json diff=json
