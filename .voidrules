@@ -51,6 +51,8 @@ Before finalizing your response, you MUST verify the following:
 - **UX Priority:** Reduce friction → no required participants, bill name optional.
 
 ## Rules Status / Validation
+- Always reply with "- - - `.voidrules APPLIED\n\n`" at the start of your answer.
+
 Never do these unannounced. Always ask permission first and provide justification if you feel the need to do them:
 - Never import a new package unless to prevent random package import errors, unless there is a justification for why you need the new import and can't just code the function instead.
 - Do not remove lines that have nothing to do with your current changes.
