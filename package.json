@@ -1,6 +1,6 @@
 {
   "name": "bills-splitr",
-  "version": "0.3.0",
+  "version": "0.4.1",
   "private": true,
   "description": "Bills SPLITr – Instantly split bills, tips, and taxes with friends.",
   "author": "",
@@ -15,11 +15,12 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.39.7",
     "@tanstack/react-query": "^4.36.1",
+    "framer-motion": "^11.0.17",
+    "qrcode.react": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "qrcode.react": "^1.0.1",
+    "react-router-dom": "^7.9.1",
     "recharts": "^2.7.2",
-    "framer-motion": "^11.0.17",
     "shadcn-ui": "^0.4.0"
   },
   "devDependencies": {

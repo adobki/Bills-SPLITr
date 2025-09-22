@@ -117,8 +117,9 @@ Notes
 
 3. Routing & Navbar
     - Install React Router.
-    - Setup base routes: /, /bills/:id, /share/:id.
-    - Add navbar (back button, share button, etc. as per wireframes).
+    - Setup base routes: /, /bills/:id, /share/:id (as per wireframes in README.md).
+    - Add navbar (back button, share button, etc. as per wireframes in README.md).
+    - Add 404 page for unregistered/miscellaneous routes.
 
 ### **Phase 2:** Core Bill Flow
 4. Welcome / Bills List screen
