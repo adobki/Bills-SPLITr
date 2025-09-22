@@ -57,3 +57,111 @@ Never do these unannounced. Always ask permission first and provide justificatio
 - Never import a new package unless to prevent random package import errors, unless there is a justification for why you need the new import and can't just code the function instead.
 - Do not remove lines that have nothing to do with your current changes.
 - Do not randomly/needlessly reimport things that have already been imported.
+
+## Database Schema Tables (Supabase – Postgres)
+1. `users` (Supabase provides this automatically if you enable Auth)
+    - `id` (uuid, PK)
+    - `email` (text, unique)
+    - `name` (text, optional)
+    - `created_at` (timestamp)
+
+2. `bills`
+    - `id` (uuid, PK)
+    - `title` (text, required)
+    - `total_amount` (numeric, computed or stored)
+    - `created_by` (uuid, FK → users.id)
+    - `created_at` (timestamp)
+
+3. `participants`
+    - `id` (uuid, PK)
+    - `name` (text, required)
+    - `bill_id` (uuid, FK → bills.id, cascade delete)
+    - `created_at` (timestamp)
+
+4. `items`
+    - `id` (uuid, PK)
+    - `bill_id` (uuid, FK → bills.id, cascade delete)
+    - `name` (text, required)
+    - `cost` (numeric, required)
+    - `created_at` (timestamp)
+
+5. `item_assignments` (many-to-many: which participants are responsible for which item)
+    - `id` (uuid, PK)
+    - `item_id` (uuid, FK → items.id, cascade delete)
+    - `participant_id` (uuid, FK → participants.id, cascade delete)
+    - `share` (numeric, optional, defaults to equal split)
+
+Notes
+1. `bills.total_amount` can be a computed field (sum of items.cost) or updated via triggers.
+2. `item_assignments.share` allows flexibility:
+    - Equal split (default, system-calculated).
+    - Custom percentages/amounts (user override)
+
+## Development Plan (Step-by-Step)
+### Build Order Summary
+**Phase 1:** Setup project + DB schema + routing.
+**Phase 2:** Implement full CRUD for bills, items, participants, assignments.
+**Phase 3:** Sharing + delete + charts (core UX complete).
+**Phase 4:** Auth + realtime + polish (portfolio extras).
+
+### **Phase 1:** Setup & Scaffolding
+1. Project bootstrap
+    - Init React (Vite) project.
+    - Add Tailwind + shadcn/ui + Framer Motion.
+    - Configure file structure (components, pages, hooks, utils).
+
+2. Supabase setup
+    - Create project in Supabase.
+    - Define tables from schema above.
+    - Connect Supabase client SDK in React.
+
+3. Routing & Navbar
+    - Install React Router.
+    - Setup base routes: /, /bills/:id, /share/:id.
+    - Add navbar (back button, share button, etc. as per wireframes).
+
+### **Phase 2:** Core Bill Flow
+4. Welcome / Bills List screen
+    - Fetch & display user’s bills (or demo bills if auth not enabled yet).
+    - “+ Add Bill” CTA → opens Add Bill screen.
+
+5. Add Bill screen
+    - Create a bill (title).
+    - Save to Supabase.
+    - Redirect back to list.
+
+6. Bill Details screen (items + participants)
+    - Add/Delete items (name, cost).
+    - Add/Delete participants.
+    - Realtime updates (optional).
+
+7. Assignments logic
+    - Add participants to items.
+    - Calculate per-person totals.
+    - Display summary list under chart.
+
+### **Phase 3:** Sharing & UX Polish
+8. Share screen/modal
+    - Display summary of who owes what.
+    - Add button to copy/share link.
+    - Future: generate QR code with share link.
+
+9. Delete actions
+    - Enable delete for items, participants, and entire bill.
+    - Confirm before delete.
+
+10. Charts integration
+    - Recharts: Pie chart (share by participant), Bar chart (expenses by item).
+
+### **Phase 4:** Roadmap Enhancements
+11. Authentication (Supabase Auth)
+    - Enable email login / magic link.
+    - Bills tied to user accounts.
+
+12. Multi-user collaboration (optional)
+    - Realtime Supabase subscriptions → multiple people editing the same bill.
+
+13. Polish
+    - Dark mode toggle.
+    - Mobile PWA support.
+    - Export/share as PDF or CSV.
