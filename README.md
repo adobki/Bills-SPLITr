@@ -245,3 +245,49 @@ Allows users to export or distribute the calculated split in a user-friendly way
               v
   [ Screen 4: Share Results Modal ] --> (Back to Bill Details)
 ```
+
+## Supabase Setup
+1. Create a project at https://app.supabase.com/.
+2. Copy your Supabase project URL and anon/public key.
+3. Copy `.env.example` to `.env.local` in the project root and fill in your credentials:
+   - `VITE_SUPABASE_URL=...`
+   - `VITE_SUPABASE_ANON_KEY=...`
+4. The Supabase client is configured in `/src/lib/supabaseClient.ts`.
+5. Run the SQL below in the Supabase SQL editor to create the required tables:
+
+```sql
+-- Users table (Supabase Auth provides this automatically)
+-- Bills table
+create table bills (
+  id uuid primary key default uuid_generate_v4(),
+  title text not null,
+  total_amount numeric,
+  created_by uuid references auth.users(id),
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+
+-- Participants table
+create table participants (
+  id uuid primary key default uuid_generate_v4(),
+  name text not null,
+  bill_id uuid references bills(id) on delete cascade,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+
+-- Items table
+create table items (
+  id uuid primary key default uuid_generate_v4(),
+  bill_id uuid references bills(id) on delete cascade,
+  name text not null,
+  cost numeric not null,
+  created_at timestamp with time zone default timezone('utc'::text, now())
+);
+
+-- Item assignments table
+create table item_assignments (
+  id uuid primary key default uuid_generate_v4(),
+  item_id uuid references items(id) on delete cascade,
+  participant_id uuid references participants(id) on delete cascade,
+  share numeric
+);
+```
